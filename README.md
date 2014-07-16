@@ -8,6 +8,10 @@ This templates and programs inspire by following programs of Emir Imamagic.
  Citrix XenAPI/RRDs monitoring
  https://www.zabbix.com/forum/showthread.php?t=25121
 
+Version
+----------------
+ 0.1
+
 Usage
 ----------------
 TBD
