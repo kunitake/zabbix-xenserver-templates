@@ -65,6 +65,7 @@ def printStats(hostname, username, password, filename, vmfilename):
 
         for vm in sx.host.get_resident_VMs(host):
             hostname = sx.VM.get_name_label(vm)
+	    vm_uuid = sx.VM.get_uuid(vm)
 
             # skip control domain
             if ('Control domain on host' in hostname):
@@ -77,7 +78,8 @@ def printStats(hostname, username, password, filename, vmfilename):
                     type = sx.SR.get_type(sr)
                     if (re.match(r"iso", type)):
                         continue
-                    vf.write("%s vbd_%s_size %s\n" % (hostname, sx.VBD.get_device(vbd), sx.VDI.get_virtual_size(vdi)))
+                    #vf.write("%s vbd_%s_size %s\n" % (hostname, sx.VBD.get_device(vbd), sx.VDI.get_virtual_size(vdi)))
+                    vf.write("%s vbd_%s_size %s\n" % (vm_uuid, sx.VBD.get_device(vbd), sx.VDI.get_virtual_size(vdi)))
 
     sx.logout()    
     f.close()
