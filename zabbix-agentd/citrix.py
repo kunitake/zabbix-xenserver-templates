@@ -21,6 +21,7 @@
 # will be stored into vmfilename instead of filename.
 
 import urllib2
+#import socket
 import xml.dom.minidom
 import sys, time
 import itertools
@@ -29,6 +30,8 @@ import shutil
 
 sys.path.append('/usr/local/lib/python')
 import XenAPI
+
+#socket.setdefaulttimeout(20)
 
 def getHostsVms(hostname, username, password, hosts, vms):
     url = 'https://%s' % hostname
@@ -41,6 +44,8 @@ def getHostsVms(hostname, username, password, hosts, vms):
             session.login_with_password(username,password)
         else:
             raise
+    finally:
+            session.logout()
     sx = session.xenapi
     retval = False
 
@@ -101,14 +106,17 @@ def printMetric(f, host, hostsCpu, hostsCpuCount, metric, value):
             hostsCpuCount[host] = 1
             hostsCpu[host] = float(value)
     else:
-        f.write("%s %s %s\n" % (host, metric, value))
+	name = host.replace(':','-')
+        f.write("%s %s %s\n" % (name, metric, value))
 
 def printHostCpu(f, hostsCpu, hostsCpuCount):
     for key, value in hostsCpu.iteritems():
-        f.write("%s cpu %s\n" % (key, value))
+	name = key.replace(':','-')
+        f.write("%s cpu %s\n" % (name, value))
 
     for key, value in hostsCpuCount.iteritems():
-        f.write("%s cpu_count %s\n" % (key, value))
+	name = key.replace(':','-')
+        f.write("%s cpu_count %s\n" % (name, value))
 
 def printStats(values, hosts, vms, filename, vmfilename):
     hostsCpu = dict()
@@ -140,7 +148,8 @@ def printStats(values, hosts, vms, filename, vmfilename):
                 printMetric(f, host, hostsCpu, hostsCpuCount, metric, value)
             elif (match.group(2) == 'vm'):
                 if (vms.has_key(match.group(3))):
-                    host = vms[match.group(3)]
+                    #host = vms[match.group(3)]
+                    host = match.group(3)
                 else:
                     continue
                 # skip control domain
@@ -163,7 +172,6 @@ def main(hostname, username, password, filename, vmfilename = ""):
     delay = 60
     tmpfilename = filename + '.tmp'
     tmpvmfilename = ""
-
     if (vmfilename != ""):
         tmpvmfilename = vmfilename + '.tmp' 
 
