@@ -115,14 +115,6 @@ my $xen_pass = 'pass';
 				 {
 					hostid => $hostid->[0]->{hostid},
 					name => $record->{name_label},
-					interfaces => [ {
-						type => 1,
-						main => 1,
-						useip => 1,
-						dns => '',
-						ip => '127.0.0.1',
-						port => '10050',
-					},],
 					groups => $groupids,
 					templates => \@templates,
 				}
